@@ -44,3 +44,18 @@ GET     : Get all the issued books with their fine amount
 > > If a user misses his subscription, then user is expected to pay $100
 > > If a user misses both renewal & subscription, then the collective amount should be $200
 
+## Commands:
+
+npm init
+npm i express
+npm i nodemon --save -dev
+npm i mongoose
+npm install mongodb
+npm i dotenv
+
+## MVC Architecture
+    >> M: Model (Structure of our MongoDB)
+    >> V: View (Frontend)
+    >> C: Controllers (Brain/Logic of a route)
+
+### DTO (Data Transfer Object)
