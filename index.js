@@ -1,10 +1,25 @@
 const express = require('express');
 
-// importing routes
+// 1.
+// Importing dotenv to manage environment variables
+const dotenv = require("dotenv");
+
+// 2.
+// Import db connection module
+const dbConnection = require("./databaseConnection");
+
 const usersRouter = require("./routes/users");
 const booksRouter = require("./routes/books");
 
+// 3.
+// Configuring dotenv to load variables from .env file
+dotenv.config();
+
 const app = express();
+
+// 4.
+// Establishing database connection
+dbConnection();
 
 const PORT = 8081;
 
@@ -17,16 +32,8 @@ app.get('/', (req,res) => {
 })
 
 
-// using routes
 app.use("/users", usersRouter);
 app.use("/books", booksRouter);
-
-
-// app.all('*', (req,res) => {
-//     res.status(500).json({
-//         message: "Not built yet"
-//     })
-// })
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
