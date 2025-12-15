@@ -150,7 +150,58 @@ router.delete('/:id',(req,res) => {
     })
 })
 
+router.get('/subscription-details/:id', (req,res) => {
+    const { id } = req.params;
 
+    const user = users.find((each) => each.id === id);
+    if (!user) {
+        return res.status(404).json({
+                success: false,
+                message: `User Not Found for id: ${id}`
+            });
+    }
+    
+    const getDateInDays = (data = '') => {
+        let date;
+        if (data) {
+            date = new Date(data);
+        } else {
+            date = new Date();
+        }
+        let days = Math.floor(date / (1000 * 60 * 60 * 24));
+        return days;
+    };
+    
+    const subscriptionType = (date) => {
+        if (user.subscriptionType === "Basic") {
+            return date + 90;
+        } else if (user.subscriptionType === "Standard") {
+            return date + 180;
+        } else {
+            return date + 365;
+        }
+    };
+    
+    
+    let returnDate = getDateInDays(user.returnDate);
+    let currentDate = getDateInDays();
+    let subscriptionDate = getDateInDays(user.subscriptionDate);
+    let subscriptionExpiration = subscriptionType(subscriptionDate);
+    
+    const data = {
+        ...user._doc,
+        subscriptionExpired: subscriptionExpiration < currentDate,
+        subscriptionDaysLeft: subscriptionExpiration - currentDate,
+        daysLeftForExpiration: returnDate - currentDate,
+        returnDate: returnDate < currentDate ? "Book return date has passed" : returnDate,
+        fine: returnDate < currentDate ? subscriptionExpiration < currentDate ? 200 : 100 : 0
+    }
+    
+    res.status(200).json({
+        success: true,
+        data
+    });
+});
 
 
 module.exports = router;
